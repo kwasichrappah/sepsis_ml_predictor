@@ -9,7 +9,7 @@ from yaml.loader import SafeLoader
 
 #setting page title and icon
 st.set_page_config(
-    page_title = "Prediction Page",
+    page_title = "Sepsis Prediction Page",
     page_icon = "🎯",
     layout = 'wide'
 )
@@ -35,7 +35,7 @@ def load_svc_pipeline():
 
 st.cache_resource(show_spinner="Models Loading")
 def load_xgboost_pipeline():
-    pipeline = joblib.load('./models/xgboost.joblib')
+    pipeline = joblib.load('./models/best_gs_model.joblib')
     return pipeline
 
 #Selecting model for prediction
@@ -43,7 +43,7 @@ def select_model():
         col1,col2 = st.columns(2)
 
         with col2:
-             st.selectbox('Select a Model', options = ['CatBoost','Logistic Regressor','XGBoost','SVC'],key='selected_model')
+             st.selectbox('Select a Model', options = ['XGBoost','CatBoost','Logistic Regressor','SVC'],key='selected_model')
 
         if st.session_state['selected_model'] == 'CatBoost':
              pipeline = load_catboost_pipeline()
@@ -70,40 +70,27 @@ if 'probability' not in st.session_state:
 
 #Making prediction 
 def make_prediction(pipeline,encoder):
-     SeniorCitizen = st.session_state['SeniorCitizen']
-     partner = st.session_state['Partner']
-     dependents = st.session_state['Dependents']
-     phoneservice = st.session_state['PhoneService']
-     multiplelines = st.session_state['MultipleLines']
-     InternetService = st.session_state['InternetService']
-     onlinesecurity = st.session_state['OnlineSecurity']
-     onlinebackup = st.session_state['OnlineBackup']
-     deviceprotetion = st.session_state['DeviceProtection']
-     techsupport = st.session_state['TechSupport']
-     streamingtv = st.session_state['StreamingTV']
-     streamingmovies = st.session_state['StreamingMovies']
-     contract = st.session_state['Contract']
-     paperlessbilling = st.session_state['PaperlessBilling']
-     tenure = st.session_state['tenure']
-     monthlycharges = st.session_state['MonthlyCharges']
-     paymentmethod = st.session_state['PaymentMethod']
+     PRG= st.session_state['PRG']
+     PL= st.session_state['PL']
+     PR = st.session_state['PR']
+     SK = st.session_state['SK']
+     TS= st.session_state['TS']
+     M11 = st.session_state['M11']
+     BD2 = st.session_state['BD2']
+     Age = st.session_state['Age']
+     Insurance = st.session_state['Insurance']
 
-     columns = ['SeniorCitizen','Partner','Dependents','PhoneService','MultipleLines',
 
-              'InternetService','OnlineSecurity','OnlineBackup','DeviceProtection',
-
-              'TechSupport','StreamingTV','StreamingMovies','Contract','PaperlessBilling','PaymentMethod','MonthlyCharges','tenure']
+     columns = ['PRG','PL','PR','SK','TS','M11','BD2','Age','Insurance']
      
-     data = [[SeniorCitizen,partner,dependents,phoneservice,multiplelines,
-              InternetService,onlinesecurity,onlinebackup,deviceprotetion,
-              techsupport,streamingtv,streamingmovies,contract,paperlessbilling,paymentmethod,monthlycharges,tenure]]
+     data = [[PRG,PL,PR,SK,TS,M11,BD2,Age,Insurance]]
      
      #create dataframe
      df = pd.DataFrame(data,columns=columns)
 
 
 
-     df.to_csv('.\\data\\history.csv',mode='a',header = not os.path.exists('.\\data\\history.csv'),index=False)
+     df.to_csv('.\\data\\history.csv',mode='a',header = not os.path.exists('./data/history.csv'),index=False)
 
      #Make prediction
      
@@ -125,35 +112,26 @@ def display_form():
      pipeline,encoder = select_model()
 
      with st.form('input-features'):
-          col1,col2 = st.columns(2)
+          col1,col2,col3 = st.columns(3)
 
           with col1:
-               st.write ('### Personal Information')
-               st.selectbox('Senior Citizen',['Yes','No'],key='SeniorCitizen')
-               st.selectbox('Gender',['Male','Female'],key='gender')
-               st.selectbox('Dependents',['Yes','No'],key='Dependents')
-               st.selectbox('Partner',['Yes','No'],key='Partner')
-               st.selectbox('Phone Service',['Yes','No'],key='PhoneService')
-               st.selectbox('Multiple Lines',['Yes','No'],key='MultipleLines')
-               st.selectbox('Internet Service',['Fiber Optic','DSL'],key='InternetService')
+               st.write ('### Patient Information')
+               st.number_input("Insert a number",key='M11', min_value=2, max_value=72, step=1) #BMI
+               st.number_input("Insert a number",key='Age') #Age
+               st.number_input("Insert a number",key='Insurance') #Insurance
+               st.number_input("Insert a number",key='PR', min_value=2, max_value=72, step=1) #Blood Pressure
 
 
-          with col2:
-               st.write('### Work Information')
-               st.selectbox('Online Security',['Yes','No'],key='OnlineSecurity')
-               st.selectbox('Online Backup',['Yes','No'],key='OnlineBackup')
-               st.selectbox('Device Protection',['Yes','No'],key='DeviceProtection')
-               st.selectbox('Tech Support',['Yes','No'],key='TechSupport')
-               st.selectbox('Streaming TV',['Yes','No'],key='StreamingTV')
-               st.selectbox('Streaming Movies',['Yes','No'],key='StreamingMovies')
-               st.selectbox('Contract Type',['Month-to-month','One year','Two year'],key='Contract')
-               st.selectbox('Paperless Billing',['Yes','No'],key='PaperlessBilling')
-               st.selectbox('What is your payment method', options=['Electronic Check','Mailed check', 'Bank transfer', 'Credit Card']
-                            ,key='PaymentMethod')
-               st.number_input('Enter your monthly charge', key='MonthlyCharges', min_value=10, max_value=200, step=1)
-               st.number_input('Enter Tenure in months', key = 'tenure', min_value=2, max_value=72, step=1)
+
+
+          with col3:
+               st.write('### Blood Work Information')
+               st.number_input("Insert a number",key='PL', min_value=2, max_value=72, step=1) #Blood Work 1
+               st.number_input("Insert a number",key='SK', min_value=2, max_value=72, step=1) #Blood Work 2
+               st.number_input("Insert a number",key='TS', min_value=2, max_value=72, step=1) #Blood Work 3
+               st.number_input("Insert a number",key='BD2', min_value=2, max_value=72, step=1) #Blood Work 4
+               st.number_input("Insert a number",key='PRG', min_value=2, max_value=72, step=1) #Plasma Glucose
                
-
 
           st.form_submit_button('Predict',on_click = make_prediction,kwargs = dict(pipeline = pipeline,encoder=encoder))
 

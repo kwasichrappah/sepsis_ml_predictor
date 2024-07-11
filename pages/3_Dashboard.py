@@ -24,7 +24,7 @@ def loader():
     bar.progress(i + 1)
     time.sleep(0.1)
 
-df= pd.read_csv("./data/customer_churn_merged.csv")
+df= pd.read_csv("./data/Paitients_Files_Train.csv")
 
 
 def eda_dashboard():
@@ -33,16 +33,16 @@ def eda_dashboard():
    col1,col3 = st.columns(2)
 
    with col1:
-      int_service_histogram = px.histogram(df,x='InternetService',color = 'Churn')
+      int_service_histogram = px.histogram(df,x='PRG',color = 'Sepssis')
 
       st.plotly_chart(int_service_histogram)
 
    with col3:
-       contract_histogram = px.histogram(df,x='Contract',color = 'Churn')
+       contract_histogram = px.histogram(df,x='Age',color = 'Sepssis')
 
        st.plotly_chart(contract_histogram)  
 
-   total_scatter = px.scatter(df,y='TotalCharges', color="Churn")
+   total_scatter = px.scatter(df,y='Insurance', color="Sepssis")
    st.plotly_chart(total_scatter)  
 
 def kpi_dashboard():
@@ -51,13 +51,13 @@ def kpi_dashboard():
    col1,col2 = st.columns(2)
 
    with col1:
-      age_contract_histogram = px.histogram(df,x='Contract',y='MonthlyCharges',color = 'SeniorCitizen')
+      age_contract_histogram = px.histogram(df,x='PRG',y='Age',color = 'Sepssis')
 
       st.plotly_chart(age_contract_histogram)
 
    with col2:
        pass
-       contract_histogram = px.histogram(df,x='Partner',y= 'MonthlyCharges',color = 'MultipleLines')
+       contract_histogram = px.histogram(df,x='M11',y= 'Age',color = 'Insurance')
 
        st.plotly_chart(contract_histogram)  
 
@@ -65,17 +65,17 @@ def kpi_dashboard():
    col3,col4 = st.columns(2)
 
    with col3:
-      contract_histogram = px.histogram(df,x='Contract',y='MonthlyCharges',color = 'InternetService')
+      contract_histogram = px.histogram(df,x='M11',y= 'Age',color = 'Insurance')
 
       st.plotly_chart(contract_histogram)
 
    with col4:
-       contract_histogram = px.histogram(df,x='OnlineSecurity',y= 'MonthlyCharges',color = 'StreamingTV')
+       contract_histogram = px.histogram(df,x='M11',y= 'Age',color = 'Insurance')
 
        st.plotly_chart(contract_histogram)  
 
 
-   monthly_scatter = px.funnel(df, x='MonthlyCharges', y='Churn')
+   monthly_scatter = px.funnel(df,x='M11',y= 'Age',color = 'Insurance')
    st.plotly_chart(monthly_scatter)  
 
 with open('config.yaml') as file:

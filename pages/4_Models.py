@@ -57,7 +57,7 @@ def select_model():
              pipeline = load_svc_pipeline()
 
         #encoder to inverse transform the result
-        encoder = joblib.load('./models/encoder.joblib')
+        encoder = 1#joblib.load('./models/encoder.joblib')
         return pipeline,encoder
 
 
@@ -112,25 +112,24 @@ def display_form():
      pipeline,encoder = select_model()
 
      with st.form('input-features'):
-          col1,col2,col3 = st.columns(3)
+          col1,col3 = st.tabs(["Patient Information", "Blood Work Information"])
 
           with col1:
                st.write ('### Patient Information')
-               st.number_input("Insert a number",key='M11', min_value=2, max_value=72, step=1) #BMI
-               st.number_input("Insert a number",key='Age') #Age
-               st.number_input("Insert a number",key='Insurance') #Insurance
-               st.number_input("Insert a number",key='PR', min_value=2, max_value=72, step=1) #Blood Pressure
-
-
+               st.number_input("Insert your age",key='Age', min_value=20, max_value=70, step=1) #Age
+               st.number_input("Please enter your BMI",key='M11', min_value=10, max_value=80, step=2) #BMI
+               st.selectbox("Do you have Insurance",[0,1]
+                            ,index=None,placeholder="Select 1 for Yes or 0 for No...",key = 'Insurance')#Insurance
+               st.number_input("Insert Blood Pressure value",key='PR', min_value=20, max_value=120, step=2) #Blood Pressure
 
 
           with col3:
                st.write('### Blood Work Information')
-               st.number_input("Insert a number",key='PL', min_value=2, max_value=72, step=1) #Blood Work 1
-               st.number_input("Insert a number",key='SK', min_value=2, max_value=72, step=1) #Blood Work 2
-               st.number_input("Insert a number",key='TS', min_value=2, max_value=72, step=1) #Blood Work 3
-               st.number_input("Insert a number",key='BD2', min_value=2, max_value=72, step=1) #Blood Work 4
-               st.number_input("Insert a number",key='PRG', min_value=2, max_value=72, step=1) #Plasma Glucose
+               st.number_input("Insert PL Blood Work value",key='PL', min_value=25, max_value=200, step=5) #Blood Work 1
+               st.number_input("Insert SK Blood Work value",key='SK', min_value=0, max_value=80, step=2) #Blood Work 2
+               st.number_input("Insert TS Blood Work value",key='TS', min_value=0, max_value=600, step=10) #Blood Work 3
+               st.number_input("Insert BD2 Blood Work value",key='BD2', min_value=0.0, max_value=2.5, step=0.1) #Blood Work 4
+               st.number_input("Insert PRG Blood Work value",key='PRG', min_value=0.0, max_value=15.0, step=1.5) #Plasma Glucose
                
 
           st.form_submit_button('Predict',on_click = make_prediction,kwargs = dict(pipeline = pipeline,encoder=encoder))

@@ -48,7 +48,7 @@ def show_form():
             }
  
             #send a request to the FastAPI backend
-            response = requests.post(f"{backend_url}/forest_prediction", json=input_data)
+            response = requests.post(f"{backend_url}/xgb_model", json=input_data)
  
             # Display the prediction
             if response.status_code == 200:

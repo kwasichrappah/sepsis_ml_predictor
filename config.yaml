@@ -19,7 +19,7 @@ credentials:
       name: azubiafrica
       password: azubi # Will be hashed automatically
 cookie:
-  expiry_days: 30
+  expiry_days: 1
   key: some_signature_key # Must be string
   name: some_cookie_name
 pre-authorized:

@@ -13,4 +13,11 @@ WORKDIR /app
 
 EXPOSE 3000
 
-CMD ["streamlit","run", "webapp.py","--server.port=8501"]
+CMD ["streamlit","run", "1_Profile.py","--server.port=8501"]
+
+
+#to upload the work unto docker as an image docker build -t sepsiswebpageimage ./frontend
+
+
+
+
